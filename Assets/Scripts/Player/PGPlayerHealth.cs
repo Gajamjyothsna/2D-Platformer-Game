@@ -6,10 +6,17 @@ using UnityEngine;
 public class PGPlayerHealth : MonoBehaviour
 {
     #region Private Variables
+    [Header ("Health")]
     [SerializeField] private float startingHealth;
     public float currentHealth {  get; private set; }
     private Animator playerAnimator;
     private bool isDead;
+
+    [Header("IFrames")]
+    [SerializeField] private float iFramesDuration;
+    [SerializeField] private int numberOfFlashed;
+    private SpriteRenderer playerSprite;
+
     #endregion
 
     #region Private Methods
@@ -17,6 +24,7 @@ public class PGPlayerHealth : MonoBehaviour
     {
         currentHealth = startingHealth;
         playerAnimator = GetComponent<Animator>();
+        playerSprite = GetComponent<SpriteRenderer>();
     }
     internal void OnDamage(float damage)
     {
@@ -25,6 +33,7 @@ public class PGPlayerHealth : MonoBehaviour
         if(currentHealth > 0)
         {
             playerAnimator.SetTrigger("hurt");
+            StartCoroutine(Invunerability());
             //IFrames
         }
         else
@@ -42,6 +51,19 @@ public class PGPlayerHealth : MonoBehaviour
     internal void AddHealth(float healthValue)
     {
         currentHealth = Mathf.Clamp(currentHealth + healthValue, 0, startingHealth);
+
+    }
+    private IEnumerator Invunerability()
+    {
+        Physics2D.IgnoreLayerCollision(8, 9, true);
+        for(int i=0;i<numberOfFlashed; i++) 
+        {
+            playerSprite.color = new Color(1, 0, 0, 0.5f);
+            yield return new WaitForSeconds(1);
+            playerSprite.color = Color.white;
+            yield return new WaitForSeconds(1);
+        }
+        Physics2D.IgnoreLayerCollision(8, 9, false);
 
     }
     #endregion
