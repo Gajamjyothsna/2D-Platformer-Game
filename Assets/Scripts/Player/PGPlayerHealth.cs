@@ -59,9 +59,9 @@ public class PGPlayerHealth : MonoBehaviour
         for(int i=0;i<numberOfFlashed; i++) 
         {
             playerSprite.color = new Color(1, 0, 0, 0.5f);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(iFramesDuration / (numberOfFlashed * 2));
             playerSprite.color = Color.white;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(iFramesDuration / (numberOfFlashed * 2));
         }
         Physics2D.IgnoreLayerCollision(8, 9, false);
 
